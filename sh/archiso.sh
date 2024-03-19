@@ -43,7 +43,7 @@ cp /mnt/etc/mkinitcpio.conf{,.d/archiso.conf} # Use default mkinitcpio
 
 genfstab -pU /mnt > /mnt/etc/fstab
 
-echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel
+echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /mnt/etc/sudoers.d/wheel
 
 arch-chroot /mnt <<EOF
 mkinitcpio -p linux
