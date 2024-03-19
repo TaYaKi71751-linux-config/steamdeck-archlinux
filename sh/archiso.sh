@@ -26,9 +26,9 @@ EOF
 
 mkfs.vfat /dev/nvme0n1p1
 
-(
-echo y
-) | mkfs.ext4 /dev/nvme0n1p2
+mkfs.ext4 /dev/nvme0n1p2 << EOF
+y
+EOF
 
 mount /dev/nvme0n1p2 /mnt
 mkdir -p /mnt/boot
