@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ( `echo ${TARGET_INSTALL_DEVICE} | grep dev` );then
+if [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep dev)" ];then
 umount -R /mnt
 
 rfkill unblock all # Enables All devices for Use WLAN
@@ -27,27 +27,27 @@ sudo parted ${TARGET_INSTALL_DEVICE} <<EOF
 set 1 esp on
 EOF
 
-if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+if [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep nvme)" ];then
 	mkfs.vfat ${TARGET_INSTALL_DEVICE}p1
-elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+elif [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep sd)" ];then
 	mkfs.vfat ${TARGET_INSTALL_DEVICE}1
 fi
 
-if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+if [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep nvme)" ];then
 	mkfs.ext4 -F ${TARGET_INSTALL_DEVICE}p2
-elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+elif [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep sd)" ];then
 	mkfs.ext4 -F ${TARGET_INSTALL_DEVICE}2
 fi
 
-if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+if [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep nvme)" ];then
 	mount ${TARGET_INSTALL_DEVICE}p2 /mnt
-elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+elif [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep sd)" ];then
 	mount ${TARGET_INSTALL_DEVICE}2 /mnt
 fi
 mkdir -p /mnt/boot
-if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+if [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep nvme)" ];then
 	mount ${TARGET_INSTALL_DEVICE}p1 /mnt/boot
-elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+elif [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep sd)" ];then
 	mount ${TARGET_INSTALL_DEVICE}1 /mnt/boot
 fi
 
@@ -91,9 +91,9 @@ EOF
 echo "title ArchLinux" > /mnt/boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux-zen.img" >> /mnt/boot/loader/entries/arch.conf
 echo "linux /vmlinuz-linux-zen" >> /mnt/boot/loader/entries/arch.conf
-if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+if [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep nvme)" ];then
 	echo "options root=PARTUUID=$(blkid -s PARTUUID -o value ${TARGET_INSTALL_DEVICE}p2) rw" >> /mnt/boot/loader/entries/arch.conf
-elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+elif [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep sd)" ];then
 	echo "options root=PARTUUID=$(blkid -s PARTUUID -o value ${TARGET_INSTALL_DEVICE}2) rw" >> /mnt/boot/loader/entries/arch.conf
 fi
 else
