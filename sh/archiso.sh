@@ -1,5 +1,6 @@
 #!/bin/bash
 
+if ( `echo ${TARGET_INSTALL_DEVICE} | grep dev` );then
 umount -R /mnt
 
 rfkill unblock all # Enables All devices for Use WLAN
@@ -7,7 +8,7 @@ iwctl # Set up WLAN (Manual)
 dhcpcd # Run dhcpcd for Set IP Address Automatically by DHCP Client
 
 
-sudo fdisk /dev/nvme0n1 <<EOF
+sudo fdisk ${TARGET_INSTALL_DEVICE} <<EOF
 g
 n
 p
@@ -22,18 +23,33 @@ n
 w
 EOF
 
-sudo parted /dev/nvme0n1 <<EOF
+sudo parted ${TARGET_INSTALL_DEVICE} <<EOF
 set 1 esp on
 EOF
 
+if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+	mkfs.vfat ${TARGET_INSTALL_DEVICE}p1
+elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+	mkfs.vfat ${TARGET_INSTALL_DEVICE}1
+fi
 
-mkfs.vfat /dev/nvme0n1p1
+if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+	mkfs.ext4 -F ${TARGET_INSTALL_DEVICE}p2
+elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+	mkfs.ext4 -F ${TARGET_INSTALL_DEVICE}2
+fi
 
-mkfs.ext4 -F /dev/nvme0n1p2
-
-mount /dev/nvme0n1p2 /mnt
+if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+	mount ${TARGET_INSTALL_DEVICE}p2 /mnt
+elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+	mount ${TARGET_INSTALL_DEVICE}2 /mnt
+fi
 mkdir -p /mnt/boot
-mount /dev/nvme0n1p1 /mnt/boot
+if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+	mount ${TARGET_INSTALL_DEVICE}p1 /mnt/boot
+elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+	mount ${TARGET_INSTALL_DEVICE}1 /mnt/boot
+fi
 
 unsquashfs -f -d /mnt $(find / | grep airootfs.sfs | tail -n 1) # extract archiso to /mnt
 
@@ -55,7 +71,8 @@ useradd -mG wheel deck
 pacman-key --init
 pacman-key --populate
 pacman -Syyu --noconfirm
-pacman -S plasma kde-{utilities,network} git vim gamescope --noconfirm
+pacman -S plasma kde-{utilities,network} git vim gamescope  --noconfirm
+pacman -S linux-zen linux-zen-headers --noconfirm
 pacman -S vulkan-intel lib32-vulkan-intel --noconfirm
 pacman -S vulkan-radeon lib32-vulkan-radeon --noconfirm
 
@@ -72,7 +89,15 @@ bootctl update
 EOF
 
 echo "title ArchLinux" > /mnt/boot/loader/entries/arch.conf
-echo "initrd /initramfs-linux.img" >> /mnt/boot/loader/entries/arch.conf
-echo "linux /vmlinuz-linux" >> /mnt/boot/loader/entries/arch.conf
-echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/nvme0n1p2) rw" >> /mnt/boot/loader/entries/arch.conf
-
+echo "initrd /initramfs-linux-zen.img" >> /mnt/boot/loader/entries/arch.conf
+echo "linux /vmlinuz-linux-zen" >> /mnt/boot/loader/entries/arch.conf
+if ( `echo ${TARGET_INSTALL_DEVICE} | grep nvme` );then
+	echo "options root=PARTUUID=$(blkid -s PARTUUID -o value ${TARGET_INSTALL_DEVICE}p2) rw" >> /mnt/boot/loader/entries/arch.conf
+elif ( `echo ${TARGET_INSTALL_DEVICE} | grep sd` );then
+	echo "options root=PARTUUID=$(blkid -s PARTUUID -o value ${TARGET_INSTALL_DEVICE}2) rw" >> /mnt/boot/loader/entries/arch.conf
+fi
+else
+ echo	\$TARGET_INSTALL_DEVICE was not set. Set like next lines.
+	echo export TARGET_INSTALL_DEVICE=/dev/nvmeXnY
+	echo export TARGET_INSTALL_DEVICE=/dev/sdX
+fi
