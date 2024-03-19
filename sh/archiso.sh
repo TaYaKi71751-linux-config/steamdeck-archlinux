@@ -88,6 +88,9 @@ bootctl update
 
 EOF
 
+mkinitcpio -p linux
+mkinitcpio -p linux-zen
+
 echo "title ArchLinux" > /mnt/boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux-zen.img" >> /mnt/boot/loader/entries/arch.conf
 echo "linux /vmlinuz-linux-zen" >> /mnt/boot/loader/entries/arch.conf
