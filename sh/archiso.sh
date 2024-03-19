@@ -81,7 +81,6 @@ pacman -S steam --noconfirm
 
 systemctl enable NetworkManager sddm bluetooth
 su deck --command -- && cd /home/deck && git clone https://github.com/TaYaKi71751-linux-config/deckifier.git && cd deckifier && USER=deck bash install.sh
-su deck --command -- curl -LsSf https://raw.githubusercontent.com/TaYaKi71751-linux-config/steam-shortcuts/HEAD/sh/prerun/index.sh | bash
 
 bootctl install
 bootctl update
@@ -90,6 +89,9 @@ mkinitcpio -p linux-zen
 
 EOF
 
+mkdir -p /mnt/home/deck/Desktop
+echo 'bash -c "$(curl -LsSf https://raw.githubusercontent.com/TaYaKi71751-linux-config/steam-shortcuts/HEAD/sh/prerun/index.sh)"' >> /mnt/home/deck/Desktop/steam-shortcuts.sh
+echo 'cd ${HOME}; git clone https://github.com/TaYaKi71751-linux-config/deckifier.git; cd deckifier; git pull; bash install.sh' >> /mnt/home/deck/Desktop/deckifier.sh
 
 echo "title ArchLinux" > /mnt/boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux-zen.img" >> /mnt/boot/loader/entries/arch.conf
@@ -104,3 +106,4 @@ else
 	echo export TARGET_INSTALL_DEVICE=/dev/nvmeXnY
 	echo export TARGET_INSTALL_DEVICE=/dev/sdX
 fi
+chown -R deck:deck /mnt/home/deck/
