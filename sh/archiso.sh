@@ -71,7 +71,7 @@ useradd -mG wheel deck
 pacman-key --init
 pacman-key --populate
 pacman -Syyu --noconfirm
-pacman -S plasma kde-{utilities,network} git vim gamescope  --noconfirm
+pacman -S sddm plasma-meta kde-{utilities,network} git vim gamescope  --noconfirm
 pacman -S linux-zen linux-zen-headers --noconfirm
 pacman -S vulkan-intel lib32-vulkan-intel --noconfirm
 pacman -S vulkan-radeon lib32-vulkan-radeon --noconfirm
