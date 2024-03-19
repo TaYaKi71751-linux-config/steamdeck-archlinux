@@ -85,11 +85,11 @@ su deck --command -- curl -LsSf https://raw.githubusercontent.com/TaYaKi71751-li
 
 bootctl install
 bootctl update
+mkinitcpio -p linux
+mkinitcpio -p linux-zen
 
 EOF
 
-mkinitcpio -p linux
-mkinitcpio -p linux-zen
 
 echo "title ArchLinux" > /mnt/boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux-zen.img" >> /mnt/boot/loader/entries/arch.conf
