@@ -44,6 +44,8 @@ cp /mnt/etc/mkinitcpio.conf{,.d/archiso.conf} # Use default mkinitcpio
 genfstab -pU /mnt > /mnt/etc/fstab
 
 echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /mnt/etc/sudoers.d/wheel
+echo "[multilib]" >> /mnt/etc/pacman.conf
+echo "Include = /etc/pacman.d/mirrorlist" >> /mnt/etc/pacman.conf
 
 arch-chroot /mnt <<EOF
 mkinitcpio -p linux
