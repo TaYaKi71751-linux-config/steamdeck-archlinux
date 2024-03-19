@@ -54,10 +54,10 @@ useradd -mG wheel deck
 
 pacman-key --init
 pacman-key --populate
+pacman -Syyu --noconfirm
 pacman -S plasma kde-{utilities,network} git vim gamescope --noconfirm
 pacman -S steam --noconfirm
 
-pacman -Syyu --noconfirm
 
 systemctl enable NetworkManager sddm bluetooth
 su deck --command -- cd /home/deck && git clone https://github.com/TaYaKi71751-linux-config/deckifier.git && cd deckifier && bash install.sh
