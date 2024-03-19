@@ -4,18 +4,28 @@ rfkill unblock all # Enables All devices for Use WLAN
 iwctl # Set up WLAN (Manual)
 dhcpcd # Run dhcpcd for Set IP Address Automatically by DHCP Client
 (
-echo g # Create a new empty GPT partition table
-echo n # Add a new partition
-echo p # Primary partition
-echo 1 # Partition number
-echo   # First sector (Accept default: 1)
+echo g
+# Create a new empty GPT partition table
+echo n
+# Add a new partition
+echo p
+# Primary partition
+echo 1
+# Partition number
+echo ""
+# First sector (Accept default: 1)
 echo 1024 # Last sector (Accept : 1G)
 
-echo n # Add a new partition
-echo 2 # Partition number
-echo   # First sector (Accept default: 1)
-echo   # Last sector (Accept default: varies)
-echo w # Write changes
+echo n
+# Add a new partition
+echo 2
+# Partition number
+echo ""
+# First sector (Accept default: 1)
+echo ""
+# Last sector (Accept default: varies)
+echo w
+# Write changes
 ) | sudo fdisk /dev/nvme0n1
 
 (
