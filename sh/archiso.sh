@@ -56,11 +56,14 @@ pacman-key --init
 pacman-key --populate
 pacman -Syyu --noconfirm
 pacman -S plasma kde-{utilities,network} git vim gamescope --noconfirm
+pacman -S vulkan-intel lib32-vulkan-intel --noconfirm
+pacman -S vulkan-radeon lib32-vulkan-radeon --noconfirm
+
 pacman -S steam --noconfirm
 
 
 systemctl enable NetworkManager sddm bluetooth
-su deck --command -- cd /home/deck && git clone https://github.com/TaYaKi71751-linux-config/deckifier.git && cd deckifier && bash install.sh
+su deck --command -- && cd /home/deck && git clone https://github.com/TaYaKi71751-linux-config/deckifier.git && cd deckifier && USER=deck bash install.sh
 su deck --command -- curl -LsSf https://raw.githubusercontent.com/TaYaKi71751-linux-config/steam-shortcuts/HEAD/sh/prerun/index.sh | bash
 
 bootctl install
