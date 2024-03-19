@@ -1,5 +1,7 @@
 #!/bin/bash
 
+umount -R /mnt
+
 rfkill unblock all # Enables All devices for Use WLAN
 iwctl # Set up WLAN (Manual)
 dhcpcd # Run dhcpcd for Set IP Address Automatically by DHCP Client
