@@ -42,11 +42,11 @@ cp /mnt/etc/mkinitcpio.conf{,.d/archiso.conf} # Use default mkinitcpio
 
 genfstab -pU /mnt > /mnt/etc/fstab
 
-vim /mnt/etc/sudoers
 arch-chroot /mnt <<EOF
 mkinitcpio -p linux
 
 useradd -mG wheel deck
+echo " %wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel
 
 pacman -S plasma kde-{utilities,network} git vim gamescope --noconfirm
 pacman -S steam --noconfirm
