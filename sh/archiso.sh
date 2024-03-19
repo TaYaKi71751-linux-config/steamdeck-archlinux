@@ -43,11 +43,12 @@ cp /mnt/etc/mkinitcpio.conf{,.d/archiso.conf} # Use default mkinitcpio
 
 genfstab -pU /mnt > /mnt/etc/fstab
 
+echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel
+
 arch-chroot /mnt <<EOF
 mkinitcpio -p linux
 
 useradd -mG wheel deck
-echo " %wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel
 
 pacman-key --init
 pacman-key --populate
@@ -61,12 +62,12 @@ su deck --command -- cd /home/deck && git clone https://github.com/TaYaKi71751-l
 su deck --command -- bash -c "$(curl -LsSf https://raw.githubusercontent.com/TaYaKi71751-linux-config/steam-shortcuts/HEAD/sh/prerun/index.sh)"
 
 bootctl install
-echo "title ArchLinux" > /boot/loader/entries/arch.conf
-echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
-echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/nvme0n1p2) rw" >> /boot/loader/entries/arch.conf
 bootctl update
 
 EOF
 
+echo "title ArchLinux" > /mnt/boot/loader/entries/arch.conf
+echo "initrd /initramfs-linux.img" >> /mnt/boot/loader/entries/arch.conf
+echo "linux /vmlinuz-linux" >> /mnt/boot/loader/entries/arch.conf
+echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/nvme0n1p2) rw" >> /mnt/boot/loader/entries/arch.conf
 
