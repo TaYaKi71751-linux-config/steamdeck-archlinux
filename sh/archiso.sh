@@ -49,6 +49,8 @@ mkinitcpio -p linux
 useradd -mG wheel deck
 echo " %wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/wheel
 
+pacman-key --init
+pacman-key --populate
 pacman -S plasma kde-{utilities,network} git vim gamescope --noconfirm
 pacman -S steam --noconfirm
 
