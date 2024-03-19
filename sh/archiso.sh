@@ -106,4 +106,6 @@ else
 	echo export TARGET_INSTALL_DEVICE=/dev/nvmeXnY
 	echo export TARGET_INSTALL_DEVICE=/dev/sdX
 fi
-chown -R deck:deck /mnt/home/deck/
+arch-chroot /mnt <<EOF
+chown -R deck:deck /home/deck/
+EOF
