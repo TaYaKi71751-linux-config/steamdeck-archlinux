@@ -42,11 +42,11 @@ cp /mnt/etc/mkinitcpio.conf{,.d/archiso.conf} # Use default mkinitcpio
 
 genfstab -pU /mnt > /mnt/etc/fstab
 
+vim /mnt/etc/sudoers
 arch-chroot /mnt <<EOF
 mkinitcpio -p linux
 
 useradd -mG wheel deck
-vim /etc/sudoers
 
 pacman -S plasma kde-{utilities,network} git vim gamescope --noconfirm
 pacman -S steam --noconfirm
@@ -64,7 +64,6 @@ echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/nvme0n1p2) rw" >> /boot/loader/entries/arch.conf
 bootctl update
 
-exit
 EOF
 
 
