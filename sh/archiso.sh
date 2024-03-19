@@ -90,7 +90,9 @@ mkinitcpio -p linux-zen
 EOF
 
 mkdir -p /mnt/home/deck/Desktop
+echo '#!/bin/bash' >> /mnt/home/deck/Desktop/steam-shortcuts.sh
 echo 'bash -c "$(curl -LsSf https://raw.githubusercontent.com/TaYaKi71751-linux-config/steam-shortcuts/HEAD/sh/prerun/index.sh)"' >> /mnt/home/deck/Desktop/steam-shortcuts.sh
+echo '#!/bin/bash' >> /mnt/home/deck/Desktop/deckifier.sh
 echo 'cd ${HOME}; git clone https://github.com/TaYaKi71751-linux-config/deckifier.git; cd deckifier; git pull; bash install.sh' >> /mnt/home/deck/Desktop/deckifier.sh
 
 echo "title ArchLinux" > /mnt/boot/loader/entries/arch.conf
