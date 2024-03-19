@@ -80,7 +80,7 @@ pacman -S steam --noconfirm
 
 
 systemctl enable NetworkManager sddm bluetooth
-su deck --command -- && cd /home/deck && git clone https://github.com/TaYaKi71751-linux-config/deckifier.git && cd deckifier && USER=deck bash install.sh
+cd /tmp && git clone https://github.com/TaYaKi71751-linux-config/deckifier.git && cd deckifier && USER=deck bash install.sh
 
 bootctl install
 bootctl update
