@@ -89,6 +89,9 @@ mkinitcpio -p linux-zen
 
 EOF
 
+echo "#!/bin/bash" >> /mnt/etc/profile.d/deck-touchscreen.sh
+echo "xinput --map-to-output 'pointer:FTS3528:00 2808:1015' eDP" >> /mnt/etc/profile.d/deck-touchscreen.sh
+
 mkdir -p /mnt/home/deck/Desktop
 echo '#!/bin/bash' >> /mnt/home/deck/Desktop/steam-shortcuts.sh
 echo 'bash -c "$(curl -LsSf https://raw.githubusercontent.com/TaYaKi71751-linux-config/steam-shortcuts/HEAD/sh/prerun/index.sh)"' >> /mnt/home/deck/Desktop/steam-shortcuts.sh
