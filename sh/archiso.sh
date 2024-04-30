@@ -1,6 +1,30 @@
 #!/bin/bash
 
+
+if ( echo ${TARGET_DESKTOP_ENVIRONMENT} | grep gnome );then
+	export DESKTOP_ENVIRONMENT_PACKAGES=" sddm gnome gnome-extra network-manager-applet "
+elif ( echo ${TARGET_DESKTOP_ENVIRONMENT} | grep kde );then
+	export DESKTOP_ENVIRONMENT_PACKAGES=" sddm plasma kde-utilities kde-network  "
+elif ( echo ${TARGET_DESKTOP_ENVIRONMENT} | grep plasma );then
+	export DESKTOP_ENVIRONMENT_PACKAGES=" sddm plasma kde-utilities kde-network  "
+else
+ echo	\$TARGET_DESKTOP_ENVIRONMENT was not set. Set like next lines.
+	echo export TARGET_DESKTOP_ENVIROMENT=kde
+	echo export TARGET_DESKTOP_ENVIROMENT=plasma
+	echo export TARGET_DESKTOP_ENVIROMENT=gnome
+	exit -1
+fi
+echo ${TARGET_DESKTOP_ENVIRONMENT}
+
 if [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep dev)" ];then
+	echo ${TARGET_INSTALL_DEVICE}
+else
+ echo	\$TARGET_INSTALL_DEVICE was not set. Set like next lines.
+	echo export TARGET_INSTALL_DEVICE=/dev/nvmeXnY
+	echo export TARGET_INSTALL_DEVICE=/dev/sdX
+	exit -1
+fi
+
 umount -R /mnt
 
 rfkill unblock all # Enables All devices for Use WLAN
@@ -63,6 +87,7 @@ echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" > /mnt/etc/sudoers.d/wheel
 echo "[multilib]" >> /mnt/etc/pacman.conf
 echo "Include = /etc/pacman.d/mirrorlist" >> /mnt/etc/pacman.conf
 
+
 arch-chroot /mnt <<EOF
 mkinitcpio -p linux
 
@@ -71,7 +96,7 @@ useradd -mG wheel deck
 pacman-key --init
 pacman-key --populate
 pacman -Syyu --noconfirm
-pacman -S sddm gnome gnome-extra networkmanager network-manager-applet git vim gamescope  --noconfirm
+pacman -S ${DESKTOP_ENVIRONMENT_PACKAGES} networkmanager git vim gamescope  --noconfirm
 pacman -S linux-zen linux-zen-headers --noconfirm
 pacman -S vulkan-intel lib32-vulkan-intel --noconfirm
 pacman -S vulkan-radeon lib32-vulkan-radeon --noconfirm
@@ -105,11 +130,6 @@ if [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep nvme)" ];then
 	echo "options root=PARTUUID=$(blkid -s PARTUUID -o value ${TARGET_INSTALL_DEVICE}p2) rw" >> /mnt/boot/loader/entries/arch.conf
 elif [ -n "$(echo ${TARGET_INSTALL_DEVICE} | grep sd)" ];then
 	echo "options root=PARTUUID=$(blkid -s PARTUUID -o value ${TARGET_INSTALL_DEVICE}2) rw" >> /mnt/boot/loader/entries/arch.conf
-fi
-else
- echo	\$TARGET_INSTALL_DEVICE was not set. Set like next lines.
-	echo export TARGET_INSTALL_DEVICE=/dev/nvmeXnY
-	echo export TARGET_INSTALL_DEVICE=/dev/sdX
 fi
 arch-chroot /mnt <<EOF
 chown -R deck:deck /home/deck/
